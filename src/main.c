@@ -256,18 +256,19 @@ int main(void)
                     printf("couldn't update strip: %d", err);
                     #endif
                 }
+
+                err = gpio_remove_callback(button.port, &button_cb_data);
+                if (err) {
+                    #ifdef DEBUG
+                    printf("Could not remove callback (%d)\n", err);
+                    #endif
+                    return 0;
+                }
+
                 err = gpio_pin_interrupt_configure_dt(&button, 	GPIO_INT_LEVEL_ACTIVE);
                 if (err) {
                     #ifdef DEBUG
                     printf("Could not configure sw0 GPIO interrupt (%d)\n", err);
-                    #endif
-                    return 0;
-                }
-                gpio_remove_callback(button.port, &button_cb_data);
-                err = gpio_pin_interrupt_configure_dt(&button, 	GPIO_INT_LEVEL_ACTIVE);
-                if (err) {
-                    #ifdef DEBUG
-                    printf("Could not remove callback (%d)\n", err);
                     #endif
                     return 0;
                 }
